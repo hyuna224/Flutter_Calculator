@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,10 +11,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const CalculatorDark(),
+    return ScreenUtilInit(
+      designSize: Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder:
+          (context, child) => MaterialApp(
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            home: CalculatorDark(),
+          ),
     );
   }
 }
@@ -30,17 +40,17 @@ class CalculatorDark extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 375,
-          height: 812,
+          width: 375.w,
+          height: 812.h,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(color: const Color(0xFF16171C)),
           child: Stack(
             children: [
               Positioned(
-                left: 20,
-                top: 147,
+                left: 20.w,
+                top: 147.h,
                 child: Container(
-                  width: 335,
+                  width: 335.w,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -49,14 +59,14 @@ class CalculatorDark extends StatelessWidget {
                     children: [
                       Container(
                         width: double.infinity,
-                        height: 47,
+                        height: 47.h,
                         child: Stack(
                           children: [
                             Positioned(
-                              left: 0,
-                              top: -1,
+                              left: 0.w,
+                              top: -1.h,
                               child: SizedBox(
-                                width: 335,
+                                width: 335.w,
                                 child: Opacity(
                                   opacity: 0.40,
                                   child: Text(
@@ -77,14 +87,14 @@ class CalculatorDark extends StatelessWidget {
                       ),
                       Container(
                         width: double.infinity,
-                        height: 96,
+                        height: 96.h,
                         child: Stack(
                           children: [
                             Positioned(
-                              left: 0,
-                              top: 0,
+                              left: 0.w,
+                              top: 0.h,
                               child: SizedBox(
-                                width: 335,
+                                width: 335.w,
                                 child: Text(
                                   '3.333333',
                                   textAlign: TextAlign.right,
@@ -93,7 +103,7 @@ class CalculatorDark extends StatelessWidget {
                                     fontSize: 70,
                                     fontFamily: 'Pretendard',
                                     fontWeight: FontWeight.w300,
-                                    height: 1.37,
+                                    height: 1.37.h,
                                   ),
                                 ),
                               ),
@@ -111,22 +121,22 @@ class CalculatorDark extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Container(
-                                height: 72,
+                                height: 72.h,
                                 clipBehavior: Clip.antiAlias,
                                 decoration: ShapeDecoration(
                                   color: const Color(0xFF4E4F5F),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(24),
+                                    borderRadius: BorderRadius.circular(24.r),
                                   ),
                                 ),
                                 child: Stack(
                                   children: [
                                     Positioned(
-                                      left: 12,
-                                      top: 12,
+                                      left: 12.w,
+                                      top: 12.h,
                                       child: SizedBox(
-                                        width: 223,
-                                        height: 48,
+                                        width: 223.w,
+                                        height: 48.h,
                                         child: Text(
                                           '초기화',
                                           textAlign: TextAlign.center,
@@ -135,7 +145,7 @@ class CalculatorDark extends StatelessWidget {
                                             fontSize: 32,
                                             fontFamily: 'Pretendard',
                                             fontWeight: FontWeight.w400,
-                                            height: 1.25,
+                                            height: 1.25.h,
                                           ),
                                         ),
                                       ),
@@ -145,23 +155,23 @@ class CalculatorDark extends StatelessWidget {
                               ),
                             ),
                             Container(
-                              width: 71.75,
-                              height: 72,
+                              width: 71.75.w,
+                              height: 72.h,
                               clipBehavior: Clip.antiAlias,
                               decoration: ShapeDecoration(
                                 color: const Color(0xFF4B5EFC),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24),
+                                  borderRadius: BorderRadius.circular(24.r),
                                 ),
                               ),
                               child: Stack(
                                 children: [
                                   Positioned(
-                                    left: 12,
-                                    top: 12,
+                                    left: 12.w,
+                                    top: 12.h,
                                     child: SizedBox(
-                                      width: 48,
-                                      height: 48,
+                                      width: 48.w,
+                                      height: 48.h,
                                       child: Text(
                                         '÷',
                                         textAlign: TextAlign.center,
@@ -170,7 +180,7 @@ class CalculatorDark extends StatelessWidget {
                                           fontSize: 32,
                                           fontFamily: 'Pretendard',
                                           fontWeight: FontWeight.w400,
-                                          height: 1.25,
+                                          height: 1.25.h,
                                         ),
                                       ),
                                     ),
@@ -274,22 +284,22 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        height: 72,
+        height: 72.h,
         clipBehavior: Clip.antiAlias,
         decoration: ShapeDecoration(
           color: color,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(24.r),
           ),
         ),
         child: Stack(
           children: [
             Positioned(
-              left: 12,
-              top: 12,
+              left: 12.w,
+              top: 12.h,
               child: SizedBox(
-                width: 48,
-                height: 48,
+                width: 48.w,
+                height: 48.h,
                 child: Text(
                   innerText,
                   textAlign: TextAlign.center,
@@ -298,7 +308,7 @@ class Button extends StatelessWidget {
                     fontSize: 32,
                     fontFamily: 'Pretendard',
                     fontWeight: FontWeight.w400,
-                    height: 1.25,
+                    height: 1.25.h,
                   ),
                 ),
               ),
