@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(360, 690),
+      designSize: Size(360, 800),
       minTextAdapt: true,
       splitScreenMode: true,
       builder:
@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.blue,
               visualDensity: VisualDensity.adaptivePlatformDensity,
+              fontFamily: 'Pretendard',
             ),
             home: CalculatorDark(),
           ),
@@ -28,13 +29,18 @@ class MyApp extends StatelessWidget {
   }
 }
 
-final Color DarkGray = const Color(0xFF2D2F38); // 숫자
-final Color LightGray = const Color(0xFF4E4F5F); // 초기화
-final Color Blue = const Color(0xFF4B5EFC); // 연산버튼
-final Color White = const Color(0xFFFFFFFF); // 글자색
+const Color DarkGray = const Color(0xFF2D2F38); // 숫자
+const Color LightGray = const Color(0xFF4E4F5F); // 초기화
+const Color Blue = const Color(0xFF4B5EFC); // 연산버튼
+const Color White = const Color(0xFFFFFFFF); // 글자색
+
+String displayText = ""; // 계산기에서 보여줄 텍스트
+bool isOperatorPressed = false; // 마지막 입력이 연산자인지 여부
+bool hasDecimalPoint = false; // 소수점 입력 여부 // 소수점or피연산자 눌리면 상태 변경
 
 class CalculatorDark extends StatelessWidget {
   const CalculatorDark({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -96,7 +102,7 @@ class CalculatorDark extends StatelessWidget {
                               child: SizedBox(
                                 width: 335.w,
                                 child: Text(
-                                  '3.333333',
+                                  displayText,
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -120,73 +126,19 @@ class CalculatorDark extends StatelessWidget {
                           spacing: 16,
                           children: [
                             Expanded(
-                              child: Container(
-                                height: 72.h,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: ShapeDecoration(
-                                  color: const Color(0xFF4E4F5F),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(24.r),
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      left: 12.w,
-                                      top: 12.h,
-                                      child: SizedBox(
-                                        width: 223.w,
-                                        height: 48.h,
-                                        child: Text(
-                                          '초기화',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 32,
-                                            fontFamily: 'Pretendard',
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.25.h,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              child: Button(
+                                innerText: '초기화',
+                                color: LightGray,
+                                onPressed: () {
+                                  displayText = ""; // 초기화 버튼 눌렀을 때
+                                  isOperatorPressed = false;
+                                  hasDecimalPoint = false;
+                                },
                               ),
                             ),
-                            Container(
-                              width: 71.75.w,
-                              height: 72.h,
-                              clipBehavior: Clip.antiAlias,
-                              decoration: ShapeDecoration(
-                                color: const Color(0xFF4B5EFC),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24.r),
-                                ),
-                              ),
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    left: 12.w,
-                                    top: 12.h,
-                                    child: SizedBox(
-                                      width: 48.w,
-                                      height: 48.h,
-                                      child: Text(
-                                        '÷',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 32,
-                                          fontFamily: 'Pretendard',
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.25.h,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            SizedBox(
+                              width: 75.w,
+                              child: OpButton(innerText: "÷"),
                             ),
                           ],
                         ),
@@ -199,10 +151,10 @@ class CalculatorDark extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           spacing: 16,
                           children: [
-                            Button(innerText: "7", color: DarkGray),
-                            Button(innerText: "8", color: DarkGray),
-                            Button(innerText: "9", color: DarkGray),
-                            Button(innerText: "x", color: Blue),
+                            NumButton(innerText: "7"),
+                            NumButton(innerText: "8"),
+                            NumButton(innerText: "9"),
+                            OpButton(innerText: "x"),
                           ],
                         ),
                       ),
@@ -214,10 +166,10 @@ class CalculatorDark extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           spacing: 16,
                           children: [
-                            Button(innerText: "4", color: DarkGray),
-                            Button(innerText: "5", color: DarkGray),
-                            Button(innerText: "6", color: DarkGray),
-                            Button(innerText: "-", color: Blue),
+                            NumButton(innerText: "4"),
+                            NumButton(innerText: "5"),
+                            NumButton(innerText: "6"),
+                            OpButton(innerText: "-"),
                           ],
                         ),
                       ),
@@ -229,10 +181,10 @@ class CalculatorDark extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           spacing: 16,
                           children: [
-                            Button(innerText: "1", color: DarkGray),
-                            Button(innerText: "2", color: DarkGray),
-                            Button(innerText: "3", color: DarkGray),
-                            Button(innerText: "+", color: Blue),
+                            NumButton(innerText: "1"),
+                            NumButton(innerText: "2"),
+                            NumButton(innerText: "3"),
+                            OpButton(innerText: "+"),
                           ],
                         ),
                       ),
@@ -244,10 +196,10 @@ class CalculatorDark extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           spacing: 16,
                           children: [
-                            Button(innerText: ".", color: DarkGray),
-                            Button(innerText: "0", color: DarkGray),
-                            Button(innerText: "@", color: DarkGray),
-                            Button(innerText: "=", color: Blue),
+                            NumButton(innerText: "."),
+                            NumButton(innerText: "0"),
+                            NumButton(innerText: "@"),
+                            OpButton(innerText: "="),
                           ],
                         ),
                       ),
@@ -263,57 +215,120 @@ class CalculatorDark extends StatelessWidget {
   }
 }
 
-class NumButton extends Button {
-  const NumButton({super.key, required String innerText, required Color color})
-    : super(innerText: innerText, color: color);
+class NumButton extends StatelessWidget {
+  final String innerText;
+
+  const NumButton({Key? key, required this.innerText}) : super(key: key);
+
+  void onNumPressed(String text) {
+    if (text == ".") {
+      if (!hasDecimalPoint) { // 소수점 중복 입력 방지
+        displayText += text;
+        hasDecimalPoint = true;
+      }
+    } else if (text == "@") { // 지우기 버튼
+      displayText = displayText.substring(0, displayText.length - 1)
+    } else {  // 숫자 버튼
+        displayText += text;
+        isOperatorPressed = false;
+    }
+    print(displayText); // 디버깅용
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      innerText: innerText,
+      color: const Color(0xFF4E4F5F), // 숫자 버튼 전용 색
+      onPressed: () => onNumPressed(innerText),
+    );
+  }
 }
 
-class OpButton extends Button {
-  const OpButton({super.key, required String innerText, required Color color})
-    : super(innerText: innerText, color: color);
+// 연산자 버튼
+class OpButton extends StatelessWidget {
+  final String innerText;
+  const OpButton({Key? key, required this.innerText}) : super(key: key);
+
+  void onOpPressed(String text) {
+    if (text == "=") {
+      displayText = "결과"; 
+    } else {
+      if (isOperatorPressed) {   // 연산자가 이미 눌린 상태에서 또 눌렀을 때
+        displayText = displayText.substring(0, displayText.length - 1) + text;
+      } else {
+        displayText += text;
+        isOperatorPressed = true;
+      }
+    }
+    print(displayText); // 디버깅용
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      innerText: innerText,
+      color: Blue, // 연산 버튼 전용 색
+      onPressed: () => onOpPressed(innerText),
+    );
+  }
 }
+
+// class DelButton extends Button {
+//   const DelButton({super.key}) : super(innerText: "초기화", color: LightGray);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Expanded(
+//       child: Container(Icon(Icons.delete, color: Colors.white, size: 32.h)),
+//     );
+//   }
+// }
 
 // 모든 버튼 공통사항, 크기
 // 이걸 상속받는 숫자/연산 버튼> 위치/색도 이때
 class Button extends StatelessWidget {
   final String innerText;
   final Color color;
-  const Button({super.key, required this.innerText, required this.color});
+  final VoidCallback onPressed;
+
+  const Button({
+    super.key,
+    required this.innerText,
+    required this.color,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        height: 72.h,
-        clipBehavior: Clip.antiAlias,
-        decoration: ShapeDecoration(
-          color: color,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24.r),
+      child: SizedBox(
+        height: 72.h, // Figma에서 뽑은 높이
+        child: TextButton(
+          onPressed: onPressed,
+          style: TextButton.styleFrom(
+            backgroundColor: color,
+            padding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24.r),
+            ),
           ),
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              left: 12.w,
-              top: 12.h,
-              child: SizedBox(
-                width: 48.w,
-                height: 48.h,
-                child: Text(
-                  innerText,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: White,
-                    fontSize: 32,
-                    fontFamily: 'Pretendard',
-                    fontWeight: FontWeight.w400,
-                    height: 1.25.h,
-                  ),
-                ),
+
+          child: SizedBox(
+            width: 48.w,
+            height: 48.h,
+            child: Text(
+              innerText,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Pretendard',
+                color: White,
+                fontSize: 28.sp,
+                fontWeight: FontWeight.w400,
+                height: 1.25.h,
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
