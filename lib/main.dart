@@ -6,10 +6,14 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -24,7 +28,7 @@ class MyApp extends StatelessWidget {
               visualDensity: VisualDensity.adaptivePlatformDensity,
               fontFamily: 'Pretendard',
             ),
-            home: CalculatorDark(),
+            home: Calculator(),
           ),
     );
   }
@@ -35,12 +39,68 @@ const Color LightGray = const Color(0xFF4E4F5F); // 초기화
 const Color Blue = const Color(0xFF4B5EFC); // 연산버튼
 const Color White = const Color(0xFFFFFFFF); // 글자색
 
-String displayText = ""; // 계산기에서 보여줄 텍스트
-bool isOperatorPressed = false; // 마지막 입력이 연산자인지 여부
-bool hasDecimalPoint = false; // 소수점 입력 여부 // 소수점or피연산자 눌리면 상태 변경
+class Calculator extends StatefulWidget {
+  const Calculator({Key? key}) : super(key: key);
 
-class CalculatorDark extends StatelessWidget {
-  const CalculatorDark({super.key});
+  @override
+  _CalState createState() => _CalState();
+}
+
+class _CalState extends State<Calculator> {
+  String _raw = ''; // 실제 계산에 사용되는 숫자
+  String _display = '0'; // 화면에 표시되는 숫자
+  bool isOperatorPressed = false; // 마지막 입력이 연산자인지 여부
+  bool hasDecimalPoint = false; // 소수점 입력 여부 // 소수점or피연산자 눌리면 상태 변경
+
+  void _updateDisplay() {
+    setState(() {
+      _display = _raw.isEmpty ? '0' : _raw;
+    });
+  }
+
+  void _onNumPressed(String input) {
+    if (input == ".") {
+      if (!hasDecimalPoint) {
+        // 소수점 중복 입력 방지
+        _raw += input;
+        _updateDisplay();
+        hasDecimalPoint = true;
+      }
+    } else {
+      // 숫자 버튼
+      _raw += input;
+      _updateDisplay();
+      isOperatorPressed = false;
+    }
+    print(_display); // 디버깅용
+  }
+
+  void _onOpPressed(String op) {
+    if (op == '=') {
+      _raw = "결과";
+    } else {
+      if (isOperatorPressed) {
+        // 연산자가 이미 눌린 상태에서 또 눌렀을 때
+        _raw = _raw.substring(0, _raw.length - 1) + op;
+      } else {
+        _raw += op;
+        isOperatorPressed = true;
+      }
+    }
+    _updateDisplay();
+  }
+
+  void _onBackspace() {
+    if (_raw.isNotEmpty) {
+      _raw = _raw.substring(0, _raw.length - 1);
+      _updateDisplay();
+    }
+  }
+
+  void _onClear() {
+    _raw = '';
+    _updateDisplay();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +137,7 @@ class CalculatorDark extends StatelessWidget {
                                 child: Opacity(
                                   opacity: 0.40,
                                   child: Text(
-                                    '10÷3',
+                                    _display,
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -103,7 +163,7 @@ class CalculatorDark extends StatelessWidget {
                               child: SizedBox(
                                 width: 335.w,
                                 child: Text(
-                                  displayText,
+                                  _display,
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                     color: Colors.white,
@@ -124,49 +184,48 @@ class CalculatorDark extends StatelessWidget {
                             child: Button(
                               innerText: '초기화',
                               color: LightGray,
-                              onPressed: () {
-                                displayText = ""; // 초기화 버튼 눌렀을 때
-                                isOperatorPressed = false;
-                                hasDecimalPoint = false;
-                              },
+                              onPressed: () => _onClear(),
                             ),
                           ),
                           SizedBox(
                             width: 75.w,
-                            child: OpButton(innerText: "÷"),
+                            child: OpButton(
+                              innerText: "÷",
+                              onPressed: _onOpPressed,
+                            ),
                           ),
                         ],
                       ),
                       RowContainer(
                         children: [
-                          NumButton(innerText: "7"),
-                          NumButton(innerText: "8"),
-                          NumButton(innerText: "9"),
-                          OpButton(innerText: "x"),
+                          NumButton(innerText: '7', onPressed: _onNumPressed),
+                          NumButton(innerText: '8', onPressed: _onNumPressed),
+                          NumButton(innerText: '9', onPressed: _onNumPressed),
+                          OpButton(innerText: 'x', onPressed: _onOpPressed),
                         ],
                       ),
                       RowContainer(
                         children: [
-                          NumButton(innerText: "4"),
-                          NumButton(innerText: "5"),
-                          NumButton(innerText: "6"),
-                          OpButton(innerText: "-"),
+                          NumButton(innerText: '4', onPressed: _onNumPressed),
+                          NumButton(innerText: '5', onPressed: _onNumPressed),
+                          NumButton(innerText: '6', onPressed: _onNumPressed),
+                          OpButton(innerText: '-', onPressed: _onOpPressed),
                         ],
                       ),
                       RowContainer(
                         children: [
-                          NumButton(innerText: "1"),
-                          NumButton(innerText: "2"),
-                          NumButton(innerText: "3"),
-                          OpButton(innerText: "+"),
+                          NumButton(innerText: '1', onPressed: _onNumPressed),
+                          NumButton(innerText: '2', onPressed: _onNumPressed),
+                          NumButton(innerText: '3', onPressed: _onNumPressed),
+                          OpButton(innerText: '+', onPressed: _onOpPressed),
                         ],
                       ),
                       RowContainer(
                         children: [
-                          NumButton(innerText: "."),
-                          NumButton(innerText: "0"),
-                          DelButton(),
-                          OpButton(innerText: "="),
+                          NumButton(innerText: '.', onPressed: _onNumPressed),
+                          NumButton(innerText: '0', onPressed: _onNumPressed),
+                          DelButton(onPressed: _onBackspace),
+                          OpButton(innerText: '=', onPressed: _onOpPressed),
                         ],
                       ),
                     ],
@@ -203,30 +262,17 @@ class RowContainer extends StatelessWidget {
 // 숫자 버튼
 class NumButton extends StatelessWidget {
   final String innerText;
+  final void Function(String) onPressed;
 
-  const NumButton({Key? key, required this.innerText}) : super(key: key);
-
-  void onNumPressed(String text) {
-    if (text == ".") {
-      if (!hasDecimalPoint) {
-        // 소수점 중복 입력 방지
-        displayText += text;
-        hasDecimalPoint = true;
-      }
-    } else {
-      // 숫자 버튼
-      displayText += text;
-      isOperatorPressed = false;
-    }
-    print(displayText); // 디버깅용
-  }
+  const NumButton({Key? key, required this.innerText, required this.onPressed})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Button(
       innerText: innerText,
       color: const Color(0xFF4E4F5F), // 숫자 버튼 전용 색
-      onPressed: () => onNumPressed(innerText),
+      onPressed: () => onPressed(innerText),
     );
   }
 }
@@ -234,40 +280,25 @@ class NumButton extends StatelessWidget {
 // 연산자 버튼
 class OpButton extends StatelessWidget {
   final String innerText;
-  const OpButton({Key? key, required this.innerText}) : super(key: key);
+  final void Function(String) onPressed;
 
-  void onOpPressed(String text) {
-    if (text == "=") {
-      displayText = "결과";
-    } else {
-      if (isOperatorPressed) {
-        // 연산자가 이미 눌린 상태에서 또 눌렀을 때
-        displayText = displayText.substring(0, displayText.length - 1) + text;
-      } else {
-        displayText += text;
-        isOperatorPressed = true;
-      }
-    }
-    print(displayText); // 디버깅용
-  }
+  const OpButton({Key? key, required this.innerText, required this.onPressed})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Button(
       innerText: innerText,
       color: Blue, // 연산 버튼 전용 색
-      onPressed: () => onOpPressed(innerText),
+      onPressed: () => onPressed(innerText),
     );
   }
 }
 
 class DelButton extends StatelessWidget {
-  const DelButton({Key? key}) : super(key: key);
+  final void Function() onPressed;
 
-  void onNumPressed() {
-    displayText = displayText.substring(0, displayText.length - 1);
-    print(displayText); // 디버깅용
-  }
+  const DelButton({Key? key, required this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -279,7 +310,7 @@ class DelButton extends StatelessWidget {
       ),
       innerText: "",
       color: const Color(0xFF4E4F5F), // 숫자 버튼 전용 색
-      onPressed: () => onNumPressed(),
+      onPressed: () => onPressed(),
     );
   }
 }
