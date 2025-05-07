@@ -178,62 +178,93 @@ class _CalState extends State<Calculator> {
                           ],
                         ),
                       ),
-                      RowContainer(
-                        children: [
-                          Expanded(
-                            child: Button(
-                              innerText: '초기화',
-                              color: LightGray,
-                              onPressed: () => _onClear(),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 75.w,
-                            child: OpButton(
-                              innerText: "÷",
-                              onPressed: _onOpPressed,
-                            ),
-                          ),
-                        ],
+                      Keypad(
+                        onNumPressed: _onNumPressed,
+                        onOpPressed: _onOpPressed,
+                        onDelPressed: _onBackspace,
+                        onClear: _onClear,
                       ),
-                      RowContainer(
-                        children: [
-                          NumButton(innerText: '7', onPressed: _onNumPressed),
-                          NumButton(innerText: '8', onPressed: _onNumPressed),
-                          NumButton(innerText: '9', onPressed: _onNumPressed),
-                          OpButton(innerText: 'x', onPressed: _onOpPressed),
-                        ],
-                      ),
-                      RowContainer(
-                        children: [
-                          NumButton(innerText: '4', onPressed: _onNumPressed),
-                          NumButton(innerText: '5', onPressed: _onNumPressed),
-                          NumButton(innerText: '6', onPressed: _onNumPressed),
-                          OpButton(innerText: '-', onPressed: _onOpPressed),
-                        ],
-                      ),
-                      RowContainer(
-                        children: [
-                          NumButton(innerText: '1', onPressed: _onNumPressed),
-                          NumButton(innerText: '2', onPressed: _onNumPressed),
-                          NumButton(innerText: '3', onPressed: _onNumPressed),
-                          OpButton(innerText: '+', onPressed: _onOpPressed),
-                        ],
-                      ),
-                      RowContainer(
-                        children: [
-                          NumButton(innerText: '.', onPressed: _onNumPressed),
-                          NumButton(innerText: '0', onPressed: _onNumPressed),
-                          DelButton(onPressed: _onBackspace),
-                          OpButton(innerText: '=', onPressed: _onOpPressed),
-                        ],
-                      ),
+                      /////////////////////////////////////////////////////////////////////////
                     ],
                   ),
                 ),
               ),
             ],
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class Keypad extends StatelessWidget {
+  final void Function(String) onOpPressed;
+  final void Function(String) onNumPressed;
+  final VoidCallback onDelPressed;
+  final VoidCallback onClear;
+
+  const Keypad({
+    Key? key,
+    required this.onNumPressed,
+    required this.onOpPressed,
+    required this.onDelPressed,
+    required this.onClear,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 16,
+      children: [
+        RowContainer(
+          children: [
+            Expanded(
+              child: Button(
+                innerText: '초기화',
+                color: LightGray,
+                onPressed: () => onClear(),
+              ),
+            ),
+            SizedBox(
+              width: 75.w,
+              child: OpButton(innerText: "÷", onPressed: onOpPressed),
+            ),
+          ],
+        ),
+        RowContainer(
+          children: [
+            NumButton(innerText: '7', onPressed: onNumPressed),
+            NumButton(innerText: '8', onPressed: onNumPressed),
+            NumButton(innerText: '9', onPressed: onNumPressed),
+            OpButton(innerText: 'x', onPressed: onOpPressed),
+          ],
+        ),
+        RowContainer(
+          children: [
+            NumButton(innerText: '4', onPressed: onNumPressed),
+            NumButton(innerText: '5', onPressed: onNumPressed),
+            NumButton(innerText: '6', onPressed: onNumPressed),
+            OpButton(innerText: '-', onPressed: onOpPressed),
+          ],
+        ),
+        RowContainer(
+          children: [
+            NumButton(innerText: '1', onPressed: onNumPressed),
+            NumButton(innerText: '2', onPressed: onNumPressed),
+            NumButton(innerText: '3', onPressed: onNumPressed),
+            OpButton(innerText: '+', onPressed: onOpPressed),
+          ],
+        ),
+        RowContainer(
+          children: [
+            NumButton(innerText: '.', onPressed: onNumPressed),
+            NumButton(innerText: '0', onPressed: onNumPressed),
+            DelButton(onPressed: onDelPressed),
+            OpButton(innerText: '=', onPressed: onOpPressed),
+          ],
         ),
       ],
     );
