@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 void main() {
   runApp(const MyApp());
@@ -198,7 +199,7 @@ class CalculatorDark extends StatelessWidget {
                           children: [
                             NumButton(innerText: "."),
                             NumButton(innerText: "0"),
-                            NumButton(innerText: "@"),
+                            DelButton(),
                             OpButton(innerText: "="),
                           ],
                         ),
@@ -215,6 +216,7 @@ class CalculatorDark extends StatelessWidget {
   }
 }
 
+// 숫자 버튼
 class NumButton extends StatelessWidget {
   final String innerText;
 
@@ -222,15 +224,15 @@ class NumButton extends StatelessWidget {
 
   void onNumPressed(String text) {
     if (text == ".") {
-      if (!hasDecimalPoint) { // 소수점 중복 입력 방지
+      if (!hasDecimalPoint) {
+        // 소수점 중복 입력 방지
         displayText += text;
         hasDecimalPoint = true;
       }
-    } else if (text == "@") { // 지우기 버튼
-      displayText = displayText.substring(0, displayText.length - 1)
-    } else {  // 숫자 버튼
-        displayText += text;
-        isOperatorPressed = false;
+    } else {
+      // 숫자 버튼
+      displayText += text;
+      isOperatorPressed = false;
     }
     print(displayText); // 디버깅용
   }
@@ -252,9 +254,10 @@ class OpButton extends StatelessWidget {
 
   void onOpPressed(String text) {
     if (text == "=") {
-      displayText = "결과"; 
+      displayText = "결과";
     } else {
-      if (isOperatorPressed) {   // 연산자가 이미 눌린 상태에서 또 눌렀을 때
+      if (isOperatorPressed) {
+        // 연산자가 이미 눌린 상태에서 또 눌렀을 때
         displayText = displayText.substring(0, displayText.length - 1) + text;
       } else {
         displayText += text;
@@ -274,16 +277,28 @@ class OpButton extends StatelessWidget {
   }
 }
 
-// class DelButton extends Button {
-//   const DelButton({super.key}) : super(innerText: "초기화", color: LightGray);
+class DelButton extends StatelessWidget {
+  const DelButton({Key? key}) : super(key: key);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Expanded(
-//       child: Container(Icon(Icons.delete, color: Colors.white, size: 32.h)),
-//     );
-//   }
-// }
+  void onNumPressed() {
+    displayText = displayText.substring(0, displayText.length - 1);
+    print(displayText); // 디버깅용
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      child: SvgPicture.asset(
+        'assets/icons/delete.svg',
+        width: 48.w,
+        height: 48.h,
+      ),
+      innerText: "",
+      color: const Color(0xFF4E4F5F), // 숫자 버튼 전용 색
+      onPressed: () => onNumPressed(),
+    );
+  }
+}
 
 // 모든 버튼 공통사항, 크기
 // 이걸 상속받는 숫자/연산 버튼> 위치/색도 이때
@@ -291,13 +306,15 @@ class Button extends StatelessWidget {
   final String innerText;
   final Color color;
   final VoidCallback onPressed;
+  final Widget? child;
 
   const Button({
-    super.key,
+    Key? key,
+    this.child,
     required this.innerText,
     required this.color,
     required this.onPressed,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -314,21 +331,23 @@ class Button extends StatelessWidget {
             ),
           ),
 
-          child: SizedBox(
-            width: 48.w,
-            height: 48.h,
-            child: Text(
-              innerText,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Pretendard',
-                color: White,
-                fontSize: 28.sp,
-                fontWeight: FontWeight.w400,
-                height: 1.25.h,
+          child:
+              child ??
+              SizedBox(
+                width: 48.w,
+                height: 48.h,
+                child: Text(
+                  innerText,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    color: White,
+                    fontSize: 28.sp,
+                    fontWeight: FontWeight.w400,
+                    height: 1.25.h,
+                  ),
+                ),
               ),
-            ),
-          ),
         ),
       ),
     );
