@@ -118,91 +118,56 @@ class CalculatorDark extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Container(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 16,
-                          children: [
-                            Expanded(
-                              child: Button(
-                                innerText: '초기화',
-                                color: LightGray,
-                                onPressed: () {
-                                  displayText = ""; // 초기화 버튼 눌렀을 때
-                                  isOperatorPressed = false;
-                                  hasDecimalPoint = false;
-                                },
-                              ),
+                      RowContainer(
+                        children: [
+                          Expanded(
+                            child: Button(
+                              innerText: '초기화',
+                              color: LightGray,
+                              onPressed: () {
+                                displayText = ""; // 초기화 버튼 눌렀을 때
+                                isOperatorPressed = false;
+                                hasDecimalPoint = false;
+                              },
                             ),
-                            SizedBox(
-                              width: 75.w,
-                              child: OpButton(innerText: "÷"),
-                            ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(
+                            width: 75.w,
+                            child: OpButton(innerText: "÷"),
+                          ),
+                        ],
                       ),
-                      Container(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 16,
-                          children: [
-                            NumButton(innerText: "7"),
-                            NumButton(innerText: "8"),
-                            NumButton(innerText: "9"),
-                            OpButton(innerText: "x"),
-                          ],
-                        ),
+                      RowContainer(
+                        children: [
+                          NumButton(innerText: "7"),
+                          NumButton(innerText: "8"),
+                          NumButton(innerText: "9"),
+                          OpButton(innerText: "x"),
+                        ],
                       ),
-                      Container(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 16,
-                          children: [
-                            NumButton(innerText: "4"),
-                            NumButton(innerText: "5"),
-                            NumButton(innerText: "6"),
-                            OpButton(innerText: "-"),
-                          ],
-                        ),
+                      RowContainer(
+                        children: [
+                          NumButton(innerText: "4"),
+                          NumButton(innerText: "5"),
+                          NumButton(innerText: "6"),
+                          OpButton(innerText: "-"),
+                        ],
                       ),
-                      Container(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 16,
-                          children: [
-                            NumButton(innerText: "1"),
-                            NumButton(innerText: "2"),
-                            NumButton(innerText: "3"),
-                            OpButton(innerText: "+"),
-                          ],
-                        ),
+                      RowContainer(
+                        children: [
+                          NumButton(innerText: "1"),
+                          NumButton(innerText: "2"),
+                          NumButton(innerText: "3"),
+                          OpButton(innerText: "+"),
+                        ],
                       ),
-                      Container(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 16,
-                          children: [
-                            NumButton(innerText: "."),
-                            NumButton(innerText: "0"),
-                            DelButton(),
-                            OpButton(innerText: "="),
-                          ],
-                        ),
+                      RowContainer(
+                        children: [
+                          NumButton(innerText: "."),
+                          NumButton(innerText: "0"),
+                          DelButton(),
+                          OpButton(innerText: "="),
+                        ],
                       ),
                     ],
                   ),
@@ -212,6 +177,25 @@ class CalculatorDark extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class RowContainer extends StatelessWidget {
+  final List<Widget> children;
+  const RowContainer({Key? key, required this.children}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 16,
+        children: children,
+      ),
     );
   }
 }
@@ -301,7 +285,6 @@ class DelButton extends StatelessWidget {
 }
 
 // 모든 버튼 공통사항, 크기
-// 이걸 상속받는 숫자/연산 버튼> 위치/색도 이때
 class Button extends StatelessWidget {
   final String innerText;
   final Color color;
