@@ -126,6 +126,8 @@ class _CalState extends State<Calculator> {
         // 결과를 _raw에 담거나, displayText에 포맷해서 보여주기
         _raw = result.toString();
         _updateDisplay();
+
+        _raw = ""; // 결과값 출력 후에는 자동 초기화
       });
     } else {
       if (_isOp()) {
@@ -134,8 +136,8 @@ class _CalState extends State<Calculator> {
       } else {
         _raw = _raw.isEmpty ? "0" + op : _raw + op;
       }
+      _updateDisplay();
     }
-    _updateDisplay();
   }
 
   void _onBackspace() {
