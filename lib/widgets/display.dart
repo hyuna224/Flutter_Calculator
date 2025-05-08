@@ -43,9 +43,7 @@ class Display extends StatelessWidget {
     required double fontSize,
     FontWeight fontWeight = FontWeight.w300,
   }) {
-    return Text(
-      text.isEmpty ? '0' : text,
-      textAlign: TextAlign.right,
+    return DefaultTextStyle(
       style: TextStyle(
         color: Colors.white,
         fontSize: fontSize,
@@ -53,6 +51,7 @@ class Display extends StatelessWidget {
         fontWeight: fontWeight,
         height: 1.37.h,
       ),
+      child: Text(text.isEmpty ? '0' : text, textAlign: TextAlign.right),
     );
   }
 }
