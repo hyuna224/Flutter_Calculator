@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../utils/evaluation.dart';
+import '../widgets/display.dart';
 import '../widgets/keypad.dart';
 
 class Calculator extends StatefulWidget {
@@ -238,63 +239,10 @@ class _CalState extends State<Calculator> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     spacing: 16,
                     children: [
-                      Container(
-                        width: double.infinity,
-                        height: 47.h,
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: 0.w,
-                              top: -1.h,
-                              child: SizedBox(
-                                width: 335.w,
-                                child: Opacity(
-                                  opacity: 0.40,
-                                  child: Text(
-                                    _display,
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 40,
-                                      fontFamily: 'Pretendard',
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        height: 96.h,
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: 0.w,
-                              top: 0.h,
-                              child: SizedBox(
-                                width: 335.w,
-                                child: Text(
-                                  _display,
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 70,
-                                    fontFamily: 'Pretendard',
-                                    fontWeight: FontWeight.w300,
-                                    height: 1.37.h,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      Display(displayText: _display),
                       Keypad(
                         onNumPressed: _onNumPressed,
                         onOpPressed: _onOpPressed,
