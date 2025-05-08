@@ -14,17 +14,18 @@ class Calculator extends StatefulWidget {
 
 class _CalState extends State<Calculator> {
   String _raw = ''; // 실제 계산에 사용되는 숫자
-  String _display = '0'; // 화면에 표시되는 숫자
+  String _displayWork = '0'; // 화면에 표시되는 숫자
+  String _displayPrev = ''; // 이전 식 표시
 
   void _updateDisplay() {
     setState(() {
-      _display = _raw.isEmpty ? '0' : _formatDisplay(_raw);
+      _displayWork = _raw.isEmpty ? '0' : _formatDisplay(_raw);
     });
   }
 
   // raw를 display에 맞게 포맷팅
   String _formatDisplay(String expression) {
-    final opReg = RegExp(r'[+\-×÷]');
+    final opReg = RegExp(r'[+\-x÷]');
 
     if (expression.isEmpty) return '0';
 
@@ -82,6 +83,7 @@ class _CalState extends State<Calculator> {
   }
 
   void _onNumPressed(String input) {
+    if (_raw == "") _displayPrev = ""; // 초기화 시 이전 식도 초기화
     final target = _getTarget();
 
     if (input == ".") {
@@ -121,6 +123,7 @@ class _CalState extends State<Calculator> {
 
   void _onOpPressed(String op) {
     if (op == '=') {
+      _displayPrev = _displayWork; // 이전 식에 결과값 넣기
       final result = expression_creation_and_evaluation(_raw);
       setState(() {
         // 결과를 _raw에 담거나, displayText에 포맷해서 보여주기
@@ -164,11 +167,13 @@ class _CalState extends State<Calculator> {
 
   void _onClear() {
     _raw = '';
+    _displayWork = '';
+    _displayPrev = '';
     _updateDisplay();
   }
 
   String _getTarget() {
-    final opIndex = _raw.lastIndexOf(RegExp(r'[+\-×÷]'));
+    final opIndex = _raw.lastIndexOf(RegExp(r'[+\-x÷]'));
     return (opIndex == -1) ? _raw : _raw.substring(opIndex + 1);
   }
 
@@ -188,7 +193,7 @@ class _CalState extends State<Calculator> {
 
   // 마지막 요소가 연산자인지 확인하는 메소드
   bool _isOp() {
-    final opReg = RegExp(r'[+\-×÷]');
+    final opReg = RegExp(r'[+\-x÷]');
 
     final length = _raw.length;
     if (length == 0) {
@@ -226,37 +231,40 @@ class _CalState extends State<Calculator> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: 375.w,
-          height: 812.h,
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(color: const Color(0xFF16171C)),
-          child: Stack(
-            children: [
-              Positioned(
-                left: 20.w,
-                top: 147.h,
-                child: Container(
-                  width: 335.w,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    spacing: 16,
-                    children: [
-                      Display(displayText: _display),
-                      Keypad(
-                        onNumPressed: _onNumPressed,
-                        onOpPressed: _onOpPressed,
-                        onDelPressed: _onBackspace,
-                        onClear: _onClear,
-                      ),
-                      /////////////////////////////////////////////////////////////////////////
-                    ],
+        Expanded(
+          child: Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(color: const Color(0xFF16171C)),
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Container(
+                    // width: double.infinity,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      spacing: 16,
+                      children: [
+                        Display(
+                          displayWork: _displayWork,
+                          displayPrev: _displayPrev,
+                        ),
+                        Keypad(
+                          onNumPressed: _onNumPressed,
+                          onOpPressed: _onOpPressed,
+                          onDelPressed: _onBackspace,
+                          onClear: _onClear,
+                        ),
+                        /////////////////////////////////////////////////////////////////////////
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ],

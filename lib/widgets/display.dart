@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Display extends StatelessWidget {
-  final String displayText;
+  final String displayPrev;
+  final String displayWork;
 
-  const Display({Key? key, required this.displayText}) : super(key: key);
+  const Display({
+    Key? key,
+    required this.displayPrev,
+    required this.displayWork,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,7 @@ class Display extends StatelessWidget {
         Opacity(
           opacity: 0.40,
           child: _buildText(
-            displayText,
+            displayPrev,
             fontSize: 20.sp,
             fontWeight: FontWeight.w300,
           ),
@@ -28,7 +33,7 @@ class Display extends StatelessWidget {
             reverse: true,
             physics: BouncingScrollPhysics(),
             child: _buildText(
-              displayText,
+              displayWork,
               fontSize: 70,
               fontWeight: FontWeight.w300,
             ),
@@ -51,7 +56,7 @@ class Display extends StatelessWidget {
         fontWeight: fontWeight,
         height: 1.37.h,
       ),
-      child: Text(text.isEmpty ? '0' : text, textAlign: TextAlign.right),
+      child: Text(text.isEmpty ? '' : text, textAlign: TextAlign.right),
     );
   }
 }
