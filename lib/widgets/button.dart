@@ -20,33 +20,30 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: SizedBox(
-        height: 72.h, // Figma에서 뽑은 높이
-        child: TextButton(
-          onPressed: onPressed,
-          style: TextButton.styleFrom(
-            backgroundColor: color,
-            padding: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24.r),
-            ),
+      child: TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+          backgroundColor: color,
+          padding: EdgeInsets.zero,
+          minimumSize: Size(48.w, 72.h),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24.r),
           ),
-
+        ),
+        child: Center(
           child:
               child ??
-              SizedBox(
-                width: 48.w,
-                height: 48.h,
-                child: Text(
-                  innerText,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Pretendard',
-                    color: White,
-                    fontSize: 28.sp,
-                    fontWeight: FontWeight.w400,
-                    height: 1.25.h,
-                  ),
+              Text(
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                innerText,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Pretendard',
+                  color: White,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w400,
+                  height: 1.25.h,
                 ),
               ),
         ),
