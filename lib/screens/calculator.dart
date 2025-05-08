@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../utils/evaluation.dart';
 import '../widgets/keypad.dart';
 
 class Calculator extends StatefulWidget {
@@ -12,8 +14,6 @@ class Calculator extends StatefulWidget {
 class _CalState extends State<Calculator> {
   String _raw = ''; // 실제 계산에 사용되는 숫자
   String _display = '0'; // 화면에 표시되는 숫자
-  bool isOperatorPressed = false; // 마지막 입력이 연산자인지 여부
-  bool hasDecimalPoint = false; // 소수점 입력 여부 // 소수점or피연산자 눌리면 상태 변경
 
   void _updateDisplay() {
     setState(() {
@@ -22,47 +22,144 @@ class _CalState extends State<Calculator> {
   }
 
   void _onNumPressed(String input) {
+    final target = _getTarget();
+
     if (input == ".") {
-      if (!hasDecimalPoint) {
+      // 비어있거나 마지막이 숫자가 아닌 경우
+      if (_raw.isEmpty || !_isNumLast()) {
+        _raw += "0.";
+        _updateDisplay();
+        return;
+      }
+
+      // 마지막 요소가 소수가 아닌 경우(소수면 처리x)
+      if (!_isDecimal()) {
         // 소수점 중복 입력 방지
         _raw += input;
         _updateDisplay();
-        hasDecimalPoint = true;
+      }
+    } else if (input == "0") {
+      if (target == "0") {
+        return;
+      } else {
+        _raw += input;
+        _updateDisplay();
+        return;
       }
     } else {
       // 숫자 버튼
-      _raw += input;
+      // 0을 대체
+      if (target == "0") {
+        _raw = _raw.substring(0, _raw.length - 1) + input;
+      } else {
+        _raw += input;
+      }
       _updateDisplay();
-      isOperatorPressed = false;
+      return;
     }
-    print(_display); // 디버깅용
   }
 
   void _onOpPressed(String op) {
     if (op == '=') {
-      _raw = "결과";
+      final result = expression_creation_and_evaluation(_raw);
+      print(result);
+      setState(() {
+        // 결과를 _raw에 담거나, displayText에 포맷해서 보여주기
+        _raw = result.toString();
+        _updateDisplay();
+      });
     } else {
-      if (isOperatorPressed) {
+      if (_isOp()) {
         // 연산자가 이미 눌린 상태에서 또 눌렀을 때
         _raw = _raw.substring(0, _raw.length - 1) + op;
       } else {
-        _raw += op;
-        isOperatorPressed = true;
+        _raw = _raw.isEmpty ? "0" + op : _raw + op;
       }
     }
     _updateDisplay();
   }
 
   void _onBackspace() {
-    if (_raw.isNotEmpty) {
+    // 비어있음
+    if (_raw.isEmpty) return;
+
+    // 마지막 요소가 연산자
+    if (_isOp() || _isNumLast()) {
       _raw = _raw.substring(0, _raw.length - 1);
       _updateDisplay();
+      return;
     }
+
+    // 마지막 요소가 소수점
+    if (_raw[_raw.length - 2] == '0') {
+      // 마지막 두 요소가 0.인 경우
+      _raw = _raw.substring(0, _raw.length - 2);
+    } else {
+      // 마지막 두 요소가 자연수.인 경우
+      _raw = _raw.substring(0, _raw.length - 1);
+    }
+    _updateDisplay();
   }
 
   void _onClear() {
     _raw = '';
     _updateDisplay();
+  }
+
+  String _getTarget() {
+    final opIndex = _raw.lastIndexOf(RegExp(r'[+\-×÷]'));
+    return (opIndex == -1) ? _raw : _raw.substring(opIndex + 1);
+  }
+
+  // 마지막 요소가 숫자인지 확인하는 메소드
+  bool _isNumLast() {
+    final numReg = RegExp(r'[0-9]');
+
+    final length = _raw.length;
+    if (length == 0) {
+      return false;
+    } else {
+      // 마지막 요소가 숫자인지 확인
+      final lastChar = _raw[length - 1];
+      print(lastChar);
+      return numReg.hasMatch(lastChar);
+    }
+  }
+
+  // 마지막 요소가 연산자인지 확인하는 메소드
+  bool _isOp() {
+    final opReg = RegExp(r'[+\-×÷]');
+
+    final length = _raw.length;
+    if (length == 0) {
+      return false;
+    } else {
+      // 마지막 요소가 숫자인지 확인
+      final lastChar = _raw[length - 1];
+      return opReg.hasMatch(lastChar);
+    }
+  }
+
+  // 마지막 요소가 소수점이 포함된 숫자인지 확인하는 메소드
+  bool _isDecimal() {
+    final opReg = RegExp(r'[+\-x÷]');
+
+    // 마지막 연산자의 뒤쪽부분을 구하기
+    final lastOpIdx = _raw.lastIndexOf(opReg);
+    String fragment = "";
+
+    if (lastOpIdx == -1) {
+      // 연산자가 없는 경우
+      fragment = _raw;
+    } else if (lastOpIdx == _raw.length) {
+      // 연산자가 마지막에 있는 경우
+      fragment = "";
+    } else {
+      // 연산자 뒤에 숫자가 있는 경우
+      _raw.substring(lastOpIdx + 1);
+    }
+
+    return fragment.contains('.');
   }
 
   @override
