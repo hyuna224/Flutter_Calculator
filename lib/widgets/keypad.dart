@@ -39,6 +39,7 @@ class Keypad extends StatelessWidget {
                 onPressed: () => onClear(),
               ),
             ),
+
             SizedBox(
               width: 75.w,
               child: OpButton(innerText: "÷", onPressed: onOpPressed),
@@ -47,34 +48,34 @@ class Keypad extends StatelessWidget {
         ),
         RowContainer(
           children: [
-            NumButton(innerText: '7', onPressed: onNumPressed),
-            NumButton(innerText: '8', onPressed: onNumPressed),
-            NumButton(innerText: '9', onPressed: onNumPressed),
-            OpButton(innerText: 'x', onPressed: onOpPressed),
+            Expanded(child: NumButton(innerText: '7', onPressed: onNumPressed)),
+            Expanded(child: NumButton(innerText: '8', onPressed: onNumPressed)),
+            Expanded(child: NumButton(innerText: '9', onPressed: onNumPressed)),
+            Expanded(child: OpButton(innerText: 'x', onPressed: onOpPressed)),
           ],
         ),
         RowContainer(
           children: [
-            NumButton(innerText: '4', onPressed: onNumPressed),
-            NumButton(innerText: '5', onPressed: onNumPressed),
-            NumButton(innerText: '6', onPressed: onNumPressed),
-            OpButton(innerText: '-', onPressed: onOpPressed),
+            Expanded(child: NumButton(innerText: '4', onPressed: onNumPressed)),
+            Expanded(child: NumButton(innerText: '5', onPressed: onNumPressed)),
+            Expanded(child: NumButton(innerText: '6', onPressed: onNumPressed)),
+            Expanded(child: OpButton(innerText: '-', onPressed: onOpPressed)),
           ],
         ),
         RowContainer(
           children: [
-            NumButton(innerText: '1', onPressed: onNumPressed),
-            NumButton(innerText: '2', onPressed: onNumPressed),
-            NumButton(innerText: '3', onPressed: onNumPressed),
-            OpButton(innerText: '+', onPressed: onOpPressed),
+            Expanded(child: NumButton(innerText: '1', onPressed: onNumPressed)),
+            Expanded(child: NumButton(innerText: '2', onPressed: onNumPressed)),
+            Expanded(child: NumButton(innerText: '3', onPressed: onNumPressed)),
+            Expanded(child: OpButton(innerText: '+', onPressed: onOpPressed)),
           ],
         ),
         RowContainer(
           children: [
-            NumButton(innerText: '.', onPressed: onNumPressed),
-            NumButton(innerText: '0', onPressed: onNumPressed),
-            DelButton(onPressed: onDelPressed),
-            OpButton(innerText: '=', onPressed: onOpPressed),
+            Expanded(child: NumButton(innerText: '.', onPressed: onNumPressed)),
+            Expanded(child: NumButton(innerText: '0', onPressed: onNumPressed)),
+            Expanded(child: DelButton(onPressed: onDelPressed)),
+            Expanded(child: OpButton(innerText: '=', onPressed: onOpPressed)),
           ],
         ),
       ],

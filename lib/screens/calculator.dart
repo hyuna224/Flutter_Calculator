@@ -229,45 +229,32 @@ class _CalState extends State<Calculator> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Container(
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(color: const Color(0xFF16171C)),
-            child: Padding(
-              padding: EdgeInsets.all(16.w),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Container(
-                    // width: double.infinity,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      spacing: 16,
-                      children: [
-                        Display(
-                          displayWork: _displayWork,
-                          displayPrev: _displayPrev,
-                        ),
-                        Keypad(
-                          onNumPressed: _onNumPressed,
-                          onOpPressed: _onOpPressed,
-                          onDelPressed: _onBackspace,
-                          onClear: _onClear,
-                        ),
-                        /////////////////////////////////////////////////////////////////////////
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(color: const Color(0xFF16171C)),
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              spacing: 16,
+              children: [
+                Display(displayWork: _displayWork, displayPrev: _displayPrev),
+                Keypad(
+                  onNumPressed: _onNumPressed,
+                  onOpPressed: _onOpPressed,
+                  onDelPressed: _onBackspace,
+                  onClear: _onClear,
+                ),
+              ],
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
