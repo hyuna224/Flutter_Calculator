@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:calculator/screens/calculator.dart';
-import 'package:calculator/constants/app_colors.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,8 +25,8 @@ class _MyAppState extends State<MyApp> {
           (context, child) => MaterialApp(
             title: 'Flutter Demo',
             theme: ThemeData(
-              primarySwatch: Blue,
-              visualDensity: VisualDensity.adaptivePlatformDensity,
+              visualDensity:
+                  VisualDensity.adaptivePlatformDensity, // 플랫폼별 권장 밀도
               fontFamily: 'Pretendard',
             ),
             home: Calculator(),
