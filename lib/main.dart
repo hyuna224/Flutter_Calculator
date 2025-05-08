@@ -18,11 +18,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(360, 800),
+      designSize: Size(360, 690),
       minTextAdapt: true,
       splitScreenMode: true,
       builder:
           (context, child) => MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             theme: ThemeData(
               visualDensity:
