@@ -17,8 +17,67 @@ class _CalState extends State<Calculator> {
 
   void _updateDisplay() {
     setState(() {
-      _display = _raw.isEmpty ? '0' : _raw;
+      _display = _raw.isEmpty ? '0' : _formatDisplay(_raw);
     });
+  }
+
+  // raw를 display에 맞게 포맷팅
+  String _formatDisplay(String expression) {
+    final opReg = RegExp(r'[+\-×÷]');
+
+    if (expression.isEmpty) return '0';
+
+    String res = "";
+    // 연산자는 바로 붙이고, 숫자는 콤마를 붙인다
+    while (expression.isNotEmpty) {
+      final idx = expression.indexOf(opReg);
+
+      // 연산자가 없는 경우 -> 전부 하나의 숫자
+      if (idx == -1) {
+        res += _formatNum(expression);
+        break;
+      }
+
+      // 연산자가 처음에 있는 경우
+      if (idx == 0) {
+        res += expression[0];
+        expression = expression.substring(1);
+        continue;
+      }
+
+      // 연산자가 중간에 있는 경우 -> 연산자 앞까지 숫자
+      if (idx > 0) {
+        final targetNum = expression.substring(0, idx);
+        res += _formatNum(targetNum); // 콤마 붙인 숫자 붙이기
+        res += expression[idx]; // 연산자 붙이기
+        expression = expression.substring(idx + 1);
+      }
+    }
+    return res;
+  }
+
+  // 세자리수 콤마 처리
+  String _formatNum(String num) {
+    if (num.isEmpty) return '0';
+
+    // 소수점 분리
+    final parts = num.split('.');
+    final intPart = parts[0];
+    final decPart = parts.length > 1 ? '.' + parts[1] : '';
+
+    // 정수부 뒤에서 한 글자씩 꺼내서 res에 붙이기
+    var count = 0;
+    String res = '';
+    for (int i = intPart.length - 1; i >= 0; i--) {
+      res = intPart[i] + res;
+      count++;
+      if (count % 3 == 0 && i != 0) {
+        res = ',' + res;
+      }
+    }
+
+    // 부호·소수부 재조립
+    return res + decPart;
   }
 
   void _onNumPressed(String input) {
@@ -62,7 +121,6 @@ class _CalState extends State<Calculator> {
   void _onOpPressed(String op) {
     if (op == '=') {
       final result = expression_creation_and_evaluation(_raw);
-      print(result);
       setState(() {
         // 결과를 _raw에 담거나, displayText에 포맷해서 보여주기
         _raw = result.toString();
@@ -121,7 +179,6 @@ class _CalState extends State<Calculator> {
     } else {
       // 마지막 요소가 숫자인지 확인
       final lastChar = _raw[length - 1];
-      print(lastChar);
       return numReg.hasMatch(lastChar);
     }
   }
