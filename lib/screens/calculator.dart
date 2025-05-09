@@ -145,7 +145,12 @@ class _CalState extends State<Calculator> {
 
   void _onBackspace() {
     // 비어있음
-    if (_raw.isEmpty) return;
+    if (_raw.isEmpty) {
+      _displayWork = '0';
+      _displayPrev = '';
+      _updateDisplay();
+      return;
+    }
 
     // 마지막 요소가 연산자
     if (_isOp() || _isNumLast()) {
